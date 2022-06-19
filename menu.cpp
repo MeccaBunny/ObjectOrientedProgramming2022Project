@@ -10,10 +10,12 @@ void Menu::append(Option op)
 {
 	optionList.push_back(op);
 }
+
 void Menu::setReadText(string readText)
 {
 	this->readText = readText;
 }
+
 void Menu::run()
 {
 	cout << readText << endl;
@@ -35,18 +37,22 @@ void Menu::run()
 		this->run();
 	}
 }
+
 void SecuredMenu::setID(string id)
 {
 	ID = id;
 }
+
 void SecuredMenu::setName(string name)
 {
 	this->name = name;
 }
+
 string SecuredMenu::getID()
 {
 	return ID;
 }
+
 string SecuredMenu::getName()
 {
 	return name;

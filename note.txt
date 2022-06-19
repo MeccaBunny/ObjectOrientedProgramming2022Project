@@ -1,0 +1,41 @@
+
+class Menu
+{
+private:
+	string readText;
+	vector<Menu> nextMenu;
+public:
+	Menu();
+	Menu(string readText) :
+		readText(readText) {}
+	string getName();
+	void setText(string name);
+	void run();
+	void append(Menu m);
+};
+
+string Menu::getName()
+{
+	return readText;
+}
+
+void Menu::setText(string readText)
+{
+	this->readText = readText;
+}
+
+void Menu::run()
+{
+	int select;
+	cout << readText << endl;
+	for (int i = 0; i < nextMenu.size(); i++)
+		cout << i + 1 << ". " << nextMenu[i].getName() << endl;
+	cout << "\nEnter menu : ";
+	cin >> select;
+	nextMenu[select - 1].run();
+}
+
+void Menu::append(Menu m)
+{
+	nextMenu.push_back(m);
+}

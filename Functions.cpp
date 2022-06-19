@@ -12,7 +12,7 @@ Menu mainMenu;
 Menu adminMenu;
 SecuredMenu studentMenu;
 
-int init()
+int init() //This function design the relations between Menu and Option. Also set the inital menu state.
 {
 	mainMenu.setReadText("Available Login operations:");
 	adminMenu.setReadText(" - Logged in as Admin - ");
@@ -47,7 +47,7 @@ int init()
 	return 0;
 }
 
-int nullf()
+int nullf() //Null function
 {
 	return 0;
 }
@@ -61,9 +61,8 @@ int mainMenu_adminLogin()
 		mainMenu.run();
 		return 0;
 	}
-	string id = "Admin";
+	string id = "Admin"; // ID of the administrator is fixed.
 	string line;
-	bool found = false;
 	string adminPassword;
 	string adminName;
 	string adminDepartment;
@@ -72,19 +71,23 @@ int mainMenu_adminLogin()
 		getline(fin, line);
 		for (int i = 0; i < id.size(); i++)
 		{
-			if (line[i] != id[i])
+			if (line[i] != id[i]) // Detect ID of the admin in Login.txt
 				break;
-			if (i == id.size() - 1)
+			if (i == id.size() - 1) // ID of the admin is found.
 			{
-				if (line[id.size()] != ' ')
+				if (line[id.size()] != ' ') // Name of the student could include 'Admin' such as 'Admini'. From such case, find the Admin's ID.
 					break;
-				for (int i = id.size() + 1; line[i] != ' '; i++)
+				//Login.txt holds every information about the user. For example, 'Admin 1234 PYJ IRE '.
+				//Code down below find administrator's ID, Password, Name, Department from the given information.
+				for (int i = id.size() + 1; line[i] != ' '; i++) 
 					adminPassword.push_back(line[i]);
 				for (int i = id.size() + adminPassword.size() + 2; line[i] != ' '; i++)
 					adminName.push_back(line[i]);
 				for (int i = id.size() + adminPassword.size() + adminName.size() + 3; line[i] != ' '; i++)
 					adminDepartment.push_back(line[i]);
+				//
 
+				//Code down below compares user entered password with password written in Login.txt. After than, Operate the nessary code.
 				cout << "password: ";
 				string getPassword;
 				cin >> getPassword;
@@ -102,15 +105,17 @@ int mainMenu_adminLogin()
 					mainMenu.run();
 					return 0;
 				}
+				//
 			}
 		}
 	}
+	// if administrator's ID is not found until the end of the file, go to mainMenu.
 	cout << "Admin doesn't exist." << endl;
 	fin.close();
 	mainMenu.run();
 	return 0;
 }
-int mainMenu_studentLogin()
+int mainMenu_studentLogin() // Code to login in for student is simular to Admin's login.
 {
 	ifstream fin("Login.txt");
 	if (!fin.is_open())
@@ -120,10 +125,12 @@ int mainMenu_studentLogin()
 		return 0;
 	}
 
+	// StudentID varys per number of student. So recieving ID is required to Login for student.
 	cout << "ID : ";
 	string id;
 	cin >> id;
 
+	// If User entered ID is same as Administrator, send warning and go to mainMenu.
 	if (id == "Admin")
 	{
 		cout << "You cannot Login as a Admin." << endl;
@@ -133,7 +140,6 @@ int mainMenu_studentLogin()
 	}
 
 	string line;
-	bool found = false;
 	string password;
 	string studentPassword;
 	string studentName;
@@ -165,6 +171,8 @@ int mainMenu_studentLogin()
 					string studentMenu_readText = " - Logged in as " + studentName + " - ";
 					studentMenu.setReadText(studentMenu_readText);
 					fin.close();
+					// To appropriately search user information in further code, studentMenu should have the information about the user.
+					// class SecuredMenu which inherit class Menu could have the information about user's ID and user's name.
 					studentMenu.setID(id);
 					studentMenu.setName(studentName);
 					studentMenu.run();
@@ -185,12 +193,12 @@ int mainMenu_studentLogin()
 	mainMenu.run();
 	return 0;
 }
-int mainMenu_exit()
+int mainMenu_exit() // If the function called by the operator doesn't call the next menu, program ends.
 {
 	return 0;
 }
 
-int adminMenu_addStudent()
+int adminMenu_addStudent() // Add student to Login.txt
 {
 	ifstream fin("Login.txt");
 	if (!fin.is_open())
@@ -208,6 +216,7 @@ int adminMenu_addStudent()
 	}
 	infoList.pop_back();
 
+	// Recieve student information entered by user.
 	cout << "Student ID : ";
 	string studentID;
 	cin >> studentID;
@@ -221,7 +230,7 @@ int adminMenu_addStudent()
 	string studentDepartment;
 	cin >> studentDepartment;
 	string setData;
-	setData = studentID + " " + studentPassword + " " + studentName + " " + studentDepartment + " ";
+	setData = studentID + " " + studentPassword + " " + studentName + " " + studentDepartment + " "; //Merge given information in to format.
 	infoList.push_back(setData);
 
 	fstream fout("Login.txt");
@@ -235,7 +244,7 @@ int adminMenu_addStudent()
 	adminMenu.run();
 	return 0;
 }
-int adminMenu_deleteStudent()
+int adminMenu_deleteStudent() //Delete student from Login.txt
 {
 	ifstream fin("Login.txt");
 	if (!fin.is_open())
@@ -254,8 +263,8 @@ int adminMenu_deleteStudent()
 	infoList.pop_back();
 	infoList.pop_back();
 	fin.close();
-	remove("Login.txt");
 
+	remove("Login.txt");
 	ofstream fout("Login.txt");
 	if (fout.is_open())
 	{
@@ -267,7 +276,7 @@ int adminMenu_deleteStudent()
 	return 0;
 
 }
-int adminMenu_viewTable()
+int adminMenu_viewTable() // Show Login.txt
 {
 	ifstream fin("Login.txt");
 	if (!fin.is_open())
@@ -291,7 +300,7 @@ int adminMenu_viewTable()
 	adminMenu.run();
 	return 0;
 }
-int adminMenu_mainMenu()
+int adminMenu_mainMenu() // Go to mainMenu;
 {
 	mainMenu.run();
 	return 0;
@@ -301,7 +310,7 @@ int adminMenu_exit()
 	return 0;
 }
 
-int studentMenu_viewTable()
+int studentMenu_viewTable() // Search user information from Login.txt using data given when Logged in and shows the user's information.
 {
 	ifstream fin("Login.txt");
 	if (!fin.is_open())

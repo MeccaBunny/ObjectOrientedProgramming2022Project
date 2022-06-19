@@ -23,7 +23,7 @@ Option::Option(int runCode, string name)
 	this->name = name;
 }
 
-void Option::run()
+void Option::run() // Run the function distinguished by the identifier.
 {
 	switch (_runCode)
 	{
